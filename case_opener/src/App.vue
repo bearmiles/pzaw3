@@ -2,7 +2,7 @@
   <div id="wrapper">
     <nav class="navbar is-dark">
       <div class="navbar-brand">
-        <router-link to="/" class="navbar-item"><strong>Case Opener</strong></router-link>
+        <router-link to="/" class="navbar-item"><strong>Mini Casino</strong></router-link>
       </div>
 
 
@@ -22,7 +22,12 @@
         </div>
       </div>
     </nav>
+    <section class="section">
     <router-view/>
+  </section>
+  <footer class="footer">
+      <p class="has-text-centered">Copyright (c) 2025</p>
+  </footer>
 </div>
 </template>
 
