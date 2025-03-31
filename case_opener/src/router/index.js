@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import CasesView from '@/views/CasesView.vue'
 import LoginView from '@/views/LoginView.vue'
 import SignUpView from '@/views/SignUpView.vue'
+import ProfileView from '@/views/ProfileView.vue'
 
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
     path: '/sign-up',
     name: 'signup',
     component: SignUpView
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: ProfileView
   }
 ]
 

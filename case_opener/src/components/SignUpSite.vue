@@ -6,7 +6,7 @@ export default {
     return {
       form: {
         fnm: '',
-        pwd: ''
+        pwd: '',
       }
     };
   },
@@ -42,10 +42,10 @@ export default {
           <p class="subtitle has-text-white">Please register to see our cool stuff!</p>
           <br><br><br>
           
-          <form @submit.prevent="sendData">
+          <form @submit.prevent="sendData">``
             <div class="field">
               <div class="control">
-                <input v-model="form.fnm" class="input is-large" type="text" placeholder="Username" required>
+                <input v-model="form.fnm" class="input is-large" type="email" placeholder="email" required>
               </div>
             </div>
             <br>

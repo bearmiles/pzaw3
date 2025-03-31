@@ -4,21 +4,29 @@ import axios from 'axios'
 export default {
   data(){
     return {
-      inputText: ''
+      isAuthenticated: false,
+      username: "",
     };
   },
+  mounted() {
+    this.checkAuth();
+  },
   methods: {
-    async sendData() {
-      try{
-        const response = await axios.post("http://127.0.0.1:8000/api/v1/simple/",{
-          text: this.inputText
+    async checkAuth() {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/v1/user', {
+          withCredentials: true  // Kluczowe!
         });
-        console.log('odpowiedz z backendu', response.data);
-      }catch (err){
-        console.error("Blad", err);
-      }
+          console.log('Odpowiedź z checkAuth:', response.data);
+          if(response.data && response.data.username) {
+            this.isAuthenticated = true;
+            this.username = response.data.username;
+          }
+        } catch (err) {
+          console.error("Błąd autoryzacji", err);
+        }
     }
-  }
+}
 }
 
 </script>
@@ -36,14 +44,10 @@ export default {
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <router-link to="/log-in" class="button is-light">Log In</router-link>
-
-              <router-link to="/inventory" class="button is-success">
-                <span class="icon"><i class="fas fa-shopping-cart"></i></span>
-              </router-link>
+              <router-link v-if="!isAuthenticated" to="/log-in" class="button is-light">Log In</router-link>
+                <router-link v-else class="button is-light" to="/profile">{{ username }}</router-link>
             </div>
           </div>
-
 
         </div>
       </div>

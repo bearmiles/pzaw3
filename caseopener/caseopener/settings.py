@@ -28,7 +28,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
+CORS_ALLOW_CREDENTIALS = True
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = False  # True w produkcji z HTTPS
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -47,6 +50,7 @@ INSTALLED_APPS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
+    "http://127.0.0.1:8080",
 ]
 
 MIDDLEWARE = [

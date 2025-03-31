@@ -6,30 +6,34 @@
             return{
                 form :{
                     fnm: '',
-                    pwd: ''
+                    pwd: '',
+                    nick: '',
                 }
             };
         },
         methods: {
             async sendData() {
-        try {
-            const response = await axios.post("http://127.0.0.1:8000/api/v1/loginn/", {
-            fnm: this.form.fnm,
-            pwd: this.form.pwd,
-            });
-            console.log('Response from backend', response.data);
-            this.$router.push('/');
-        } catch (err) {
-            console.error("Error", err);
-            if (err.response) {
-            alert(err.response.data.error || 'Login failed');
-            } else {
-            alert('Network error. Please try again.');
-            }
-        }
+                try {
+                    const response = await axios.post("http://127.0.0.1:8000/api/v1/loginn/", {
+                    fnm: this.form.fnm,
+                    pwd: this.form.pwd,
+                    nick: this.form.nick,
+                    }, {
+                    withCredentials: true
+                    });
+
+                    console.log('Response from backend', response.data);
+                    this.$root.isAuthenticated = true;
+                    this.$root.username = this.form.nick;
+                    this.$router.push('/');
+                } catch (err) {
+                    alert("prosze podac prawdziwe dane")
+                    console.error("Error", err);
+                }
+                }
     }
 }
-    }
+
 
 </script>
 
@@ -45,6 +49,12 @@
 <br>
 <br>
                 <form @submit.prevent="sendData">
+                    <div class="field">
+                        <div class="control">
+                        <input v-model='form.nick' class="input is-large" type="text" placeholder="Nickname">
+                        </div>
+                    </div>
+                    <br>
                     <div class="field">
                         <div class="control">
                         <input v-model="form.fnm" class="input is-large" type="email" placeholder="Email" autofocus="" required>
