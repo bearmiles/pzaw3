@@ -15,3 +15,16 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} ({self.nick})" if self.nick else self.user.username
+    
+class Case(models.Model):
+    name = models.CharField(max_length=100)
+
+class Skin(models.Model):
+    skin_name = models.CharField(max_length=100)
+    rarity = models.CharField(max_length=50)
+    case = models.ForeignKey(Case , on_delete=models.CASCADE)
+
+class UserInventory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    skin = models.ForeignKey(Skin, on_delete=models.CASCADE)
+    obtained_at = models.DateTimeField(auto_now_add=True)

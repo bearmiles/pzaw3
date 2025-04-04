@@ -1,10 +1,12 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Case, UserInventory, Skin
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
+from django.shortcuts import get_object_or_404
+import random
 
 @api_view(['POST'])
 def simple_api(request):
@@ -83,3 +85,24 @@ def logoutt(request):
     else:
         return Response({"success": False, "message": "wylogowywanie nie git"})
     return Response({"success": True})
+
+
+def open_case(user, case_id):
+    case = Case.objects.get(id=case_id)
+    skins = Skin.objects.get(case=case)
+
+    if not skins.exists():
+        return None
+    
+    chosen_skin = random.choice(skins)
+
+    user_inventory = UserInventory.objects.create(user=user, skin = chosen_skin)
+
+    return user_inventory
+
+@api_view(['POST'])
+def open_case_api(request, case_id):
+    user = request.user
+    case = get_object_or_404(Case, id=case_id)
+
+    open_case(user, )
