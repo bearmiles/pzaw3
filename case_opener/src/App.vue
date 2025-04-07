@@ -13,19 +13,25 @@ export default {
   },
   methods: {
     async checkAuth() {
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/api/v1/user', {
-          withCredentials: true  // Kluczowe!
-        });
-          console.log('Odpowiedź z checkAuth:', response.data);
-          if(response.data && response.data.username) {
-            this.isAuthenticated = true;
-            this.username = response.data.username;
-          }
+        try {
+          const token = localStorage.getItem('token');
+          const response = await axios.get('http://127.0.0.1:8000/api/v1/user', {
+            // withCredentials: true
+            headers: {
+              'Authorization' : `Token ${token}`,
+            }
+          });
+          this.isAuthenticated = true;
+          this.username = response.data.username;
         } catch (err) {
           console.error("Błąd autoryzacji", err);
+          this.isAuthenticated = false;
+
+          if (err.response && err.response.status === 401) {
+            this.$router.push('/log-in');
+          }
         }
-    }
+      }
 }
 }
 

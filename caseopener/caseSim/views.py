@@ -6,6 +6,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import get_object_or_404
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import authentication_classes, permission_classes
+from django.middleware.csrf import get_token
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 import random
 
 @api_view(['POST'])
@@ -55,8 +60,9 @@ def loginn(request):
 
         if userr is not None:
             login(request, userr)
+            token, _ = Token.objects.get_or_create(user=userr)
             return Response({
-                'success': True,
+                'token': token.key,
                 'message': 'Login successful',
                 'user_id': userr.id,
                 'nick' : nick
@@ -66,16 +72,14 @@ def loginn(request):
     except Exception as ex:
         return Response({"error": str(ex)}, status=500)
 
-# views.py
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def check_login(request):
-    if request.user.is_authenticated:
-        return Response({
-            "username": request.user.nick,
-            "email": request.user.username,
-            "user_id": request.user.id
-        })
-    return Response({"error": "Not authenticated"}, status=401)
+    return Response({
+        "username": request.user.username,
+        "user_id": request.user.id
+    }, status=200)
 
 @api_view(['GET'])
 def logoutt(request):
@@ -88,21 +92,35 @@ def logoutt(request):
 
 
 def open_case(user, case_id):
-    case = Case.objects.get(id=case_id)
-    skins = Skin.objects.get(case=case)
+    case = get_object_or_404(Case, id=case_id)
+    skins = Skin.objects.filter(case=case)  # Użyj filter zamiast get
 
     if not skins.exists():
         return None
     
-    chosen_skin = random.choice(skins)
+    chosen_skin = random.choice(list(skins))  # Konwersja QuerySet na listę
 
-    user_inventory = UserInventory.objects.create(user=user, skin = chosen_skin)
-
+    user_inventory = UserInventory.objects.create(user=user, skin=chosen_skin)
     return user_inventory
 
 @api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def open_case_api(request, case_id):
-    user = request.user
-    case = get_object_or_404(Case, id=case_id)
-
-    open_case(user, )
+    try:
+        user = request.user
+        user_inventory = open_case(user, case_id)
+        
+        if user_inventory is None:
+            return Response({'error': 'No skins available in this case'}, status=400)
+            
+        return Response({
+            'success': True,
+            'skin_name': user_inventory.skin.skin_name,
+            'rarity': user_inventory.skin.rarity,
+            'obtained_at': user_inventory.obtained_at
+        })
+    except Case.DoesNotExist:
+        return Response({'error': 'Case not found'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)

@@ -18,17 +18,25 @@
                     fnm: this.form.fnm,
                     pwd: this.form.pwd,
                     nick: this.form.nick,
-                    }, {
-                    withCredentials: true
                     });
 
-                    console.log('Response from backend', response.data);
+                    console.log('Login successful:', response.data);
+                    
+                    // Zapisz token i dane użytkownika
+                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('userNick', response.data.nick);
+                    localStorage.setItem('userId', response.data.user_id);
+                    
+                    // Ustaw globalny stan
                     this.$root.isAuthenticated = true;
-                    this.$root.username = this.form.nick;
+                    this.$root.username = response.data.nick;
+                    
+                    // Przekieruj na stronę główną
                     this.$router.push('/');
+                    
                 } catch (err) {
-                    alert("prosze podac prawdziwe dane")
-                    console.error("Error", err);
+                    console.error("Login error:", err);
+                    alert("Błąd logowania: " + (err.response?.data?.error || "Nieprawidłowe dane"));
                 }
                 }
     }
