@@ -23,6 +23,7 @@ class Skin(models.Model):
     skin_name = models.CharField(max_length=100)
     rarity = models.CharField(max_length=50)
     case = models.ForeignKey(Case , on_delete=models.CASCADE)
+    skin_src = models.CharField(max_length=255, default="none")
 
 class UserInventory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

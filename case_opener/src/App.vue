@@ -27,12 +27,16 @@ export default {
           console.error("Błąd autoryzacji", err);
           this.isAuthenticated = false;
 
+          localStorage.removeItem('token')
           if (err.response && err.response.status === 401) {
             this.$router.push('/log-in');
           }
         }
-      }
-}
+      },
+    goToLogin(){
+      this.$router.push('/log-in')
+    }
+  }
 }
 
 </script>
@@ -50,7 +54,7 @@ export default {
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <router-link v-if="!isAuthenticated" to="/log-in" class="button is-light">Log In</router-link>
+              <router-link v-if="!isAuthenticated" @click="goToLogin" class="button is-light">Log In</router-link>
                 <router-link v-else class="button is-light" to="/profile">{{ username }}</router-link>
             </div>
           </div>

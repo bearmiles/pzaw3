@@ -26,6 +26,8 @@
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('userNick', response.data.nick);
                     localStorage.setItem('userId', response.data.user_id);
+
+                    axios.defaults.headers.common['Authorization'] = `Token ${response.data.token}`;
                     
                     // Ustaw globalny stan
                     this.$root.isAuthenticated = true;

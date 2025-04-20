@@ -6,5 +6,8 @@ import axios from 'axios'
 
 createApp(App).use(store).use(router).mount('#app')
 
-axios.defaults.withCredentials = true;
+const token = localStorage.getItem('token');
+if (token) {
+  axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+}
 axios.defaults.baseURL = 'http://127.0.0.1:8000';

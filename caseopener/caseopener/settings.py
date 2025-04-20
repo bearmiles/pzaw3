@@ -32,9 +32,17 @@ CORS_ALLOW_CREDENTIALS = True
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ],
 }
+
+STATIC_URL = '/static/'
+
+# Ścieżka do folderu, w którym przechowywane są Twoje obrazy
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
