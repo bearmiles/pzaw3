@@ -33,6 +33,23 @@ export default {
           }
         }
       },
+      async logout(){
+            try{
+                const token = localStorage.getItem('token')
+                const response = await axios.post('http://127.0.0.1:8000/api/v1/logoutt', {} ,{
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }
+                });
+                    console.log("odpowiedz z logoutu", response.data);
+                    delete axios.defaults.headers.common['Authorization'];
+                    this.isAuthenticated = false;
+                    this.$router.push('/')
+                    this.$root.isAuthenticated = false
+            }catch (error){
+                console.log("blad z wylogowywaniem", error)
+            }
+        },
     goToLogin(){
       this.$router.push('/log-in')
     }
@@ -55,7 +72,10 @@ export default {
           <div class="navbar-item">
             <div class="buttons">
               <router-link v-if="!isAuthenticated" @click="goToLogin" class="button is-light">Log In</router-link>
-                <router-link v-else class="button is-light" to="/profile">{{ username }}</router-link>
+              <template v-else>
+                <button @click="logout" class="button is-danger">Log out</button>
+                <router-link class="button is-light" to="/profile">{{ username }}</router-link>
+              </template>
             </div>
           </div>
 

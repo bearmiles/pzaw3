@@ -31,8 +31,8 @@
         <!-- Wynik po zatrzymaniu animacji -->
         <div v-if="lastDrop" class="drop-result box has-background-dark">
           <h2 class="title has-text-white">Twój drop:</h2>
-          <p class="subtitle has-text-white">{{ lastDrop.skin_name }}</p>
-          <p class="has-text-white">Rzadkość: {{ lastDrop.rarity }}</p>
+          <p class="subtitle has-text-success">{{ lastDrop.skin_name }}</p>
+          <p class="has-text-white">Rzadkość: </p><p class="has-text-link">{{ lastDrop.rarity }}</p>
           <img :src="lastDrop.skin_src" alt="skin image" />
         </div>
       </div>
@@ -181,6 +181,13 @@
                 if (current >= max) {
                 clearInterval(this.rollInterval);
                 this.rollInterval = null;
+
+                for (let i = 0; i < 4; i++) {
+                const randIndex = Math.floor(Math.random() * this.skinImages.length);
+                this.skinImages.push({
+                  src: this.skinImages[randIndex].src
+                });
+              }
                 }
             }, 16); // ~60FPS
             }

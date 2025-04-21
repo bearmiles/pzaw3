@@ -7,10 +7,12 @@ export default{
             isAuthenticated: true,
             skinsArray: [],
             listDataString: String,
+            username: "",
         };
     },
     mounted(){
         this.fetchSkins();
+        this.checkAuth();
     },
     methods: {
         async logout(){
@@ -44,6 +46,28 @@ export default{
                 console.log(`blad ${err}`)
             }
         },
+        async checkAuth() {
+        try {
+          const token = localStorage.getItem('token');
+          const response = await axios.get('http://127.0.0.1:8000/api/v1/user', {
+            // withCredentials: true
+            headers: {
+              'Authorization' : `Token ${token}`,
+            }
+          });
+        //   this.isAuthenticated = true;
+        console.log("RESPONSE Z CHECKAUTH ",response.data)
+          this.username = response.data.username;
+        } catch (err) {
+          console.error("Błąd autoryzacji", err);
+        //   this.isAuthenticated = false;
+
+        //   localStorage.removeItem('token')
+          if (err.response && err.response.status === 401) {
+            this.$router.push('/log-in');
+          }
+        }
+      },
         async fetchSkins(){
             try{
                 const token = localStorage.getItem('token')
@@ -57,6 +81,7 @@ export default{
                 //`````````````do wypisania
                 this.listDataString = JSON.stringify(response.data, null, "\t");
                 this.skinsArray = response.data
+                this.skinsArray = this.skinsArray.reverse();
                 //`````````````````
 
                 console.log(this.skinsArray)
@@ -71,17 +96,32 @@ export default{
 </script>
 <template>
     <div>
-        <button @click="logout" class="button is-danger">Log out</button>
-        <button @click="getData" class="button is-light">getData</button>
-        <button @click="fetchSkins" class="button is-ghost">Fetch skins</button>
+        <!-- <button @click="getData" class="button is-light">getData</button>
+        <button @click="fetchSkins" class="button is-ghost">Fetch skins</button> -->
+        <br><br><br>
+        <h1 class="title has-text-centered">Skiny uzytkownika: <h1 class=" title has-text-success"> {{ username }}</h1></h1>
 
+        <br><br><br><br><br><br>
         <!-- wyswietlanie skinow uzytkownika -->
-        
-        <ul>
-            <li v-for="(skin, index) in skinsArray" :key="index">
+         <div class="grid is-gap-6 is-col-min-12">
+            <div class="cell" v-for="(skin, index) in skinsArray" :key="index">
+                <div class="box">
+                    <p>Skin: <strong>{{ skin.skin_name }}</strong></p>
+                    <br>
+                    <p>Rarity: <strong>{{ skin.rarity }}</strong></p>
+                </div>
+                
+            </div>
+         </div>
+            <!-- <div class="box" v-for="(skin, index) in skinsArray" :key="index">
+                <p>Skin: <strong>{{ skin.skin_name }}</strong></p>
+                <p>Rarity: <strong>{{ skin.rarity }}</strong></p>
+            </div> -->
+
+            <!-- <li v-for="(skin, index) in skinsArray" :key="index">
                 Skin: {{ skin.skin_name }} - Rarity: {{ skin.rarity }}
-            </li>
-        </ul>
+            </li> -->
+
 
         
         <!-- <textarea v-model="listDataString" rows="20" cols="80"></textarea>
@@ -95,3 +135,9 @@ export default{
         </pre> -->
     </div>
 </template>
+<style scoped>
+.chuj{
+    color: red;
+    text-align: center;
+}
+</style>
