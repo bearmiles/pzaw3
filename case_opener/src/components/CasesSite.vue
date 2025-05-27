@@ -20,7 +20,7 @@
         <br>
         <!-- Animacja -->
         <div v-if="selected_image" class="case-animation-wrapper">
-          <div class="gowno1"></div>
+          <div class="gowno1">a</div>
             <div
                 class="case-animation-track"
                 :style="{ transform: `translateX(${animationPosition}px)` }"
@@ -255,9 +255,11 @@
 }
 
 .gowno1{
+    height: 100%;
     position: absolute;
     text-align: center;
-    width: 10px;
+    left: 50%;
+    z-index: 1000;
     color: black;
     background-color: black;
     margin-left: auto;
