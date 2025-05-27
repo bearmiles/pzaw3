@@ -22,28 +22,28 @@ export default{
                 {
                     id: 2,
                     name: "2",
-                    htmlContent: "2",
+                    htmlContent: "1",
                     textColor: "",
                     background: "",
                 },
                 {
                     id: 3,
                     name: "3",
-                    htmlContent: "3",
+                    htmlContent: "6",
                     textColor: "",
                     background: "",
                 },
                 {
                     id: 4,
                     name: "4",
-                    htmlContent: "4",
+                    htmlContent: "1",
                     textColor: "",
                     background: "",
                 },
                 {
                     id: 5,
                     name: "5",
-                    htmlContent: "5",
+                    htmlContent: "6",
                     textColor: "",
                     background: "",
                 },
@@ -67,8 +67,8 @@ export default{
 <style scoped>
 .gowno{
     justify-content: center;
-    text-align: center;
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
 }
 </style>

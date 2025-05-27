@@ -3,7 +3,11 @@
       <div v-if="isAuthenticated" class="container">
         <h1 class="title has-text-white">Witaj, {{ username }}!</h1>
         <div class="buttons is-flex is-justify-content-center">
-          <button @click="openCase(1)" class="button case-button">
+          <div v-if="isOpening">
+              <h1 class="title has-text-centered">Skrzynka sie otwiera...</h1>
+          </div>
+          <div v-else>
+            <button @click="openCase(1)" class="button case-button">
             <img src="/assets/pobrane-_4_.png" alt="fracture_case" class="image is-128x128">
             <span class="case-name">Fracture Case</span>
           </button>
@@ -11,10 +15,12 @@
             <img src="/assets/pobrane.png" alt="bravo_case" class="image is-128x128">
             <span class="case-name">Bravo Case</span>
           </button>
+          </div>
         </div>
         <br>
         <!-- Animacja -->
         <div v-if="selected_image" class="case-animation-wrapper">
+          <div class="gowno1"></div>
             <div
                 class="case-animation-track"
                 :style="{ transform: `translateX(${animationPosition}px)` }"
@@ -60,6 +66,7 @@
         animationPosition: -1000, // Początkowa pozycja animacji (poza ekranem)
         animationDuration: 5000, // Czas animacji w milisekundach
         koniecAnim: false,
+        isOpening: false,
       };
     },
     async created() {
@@ -149,6 +156,7 @@
         }
         },
         startAnimation(drop) {
+          this.isOpening = true;
           const itemWidth = 220;
           const visibleItems = 5;
           const targetIndex = this.skinImages.length - 1;
@@ -186,6 +194,7 @@
               // Dopiero teraz pokazujemy dropa
               setTimeout(() => {
                 this.lastDrop = drop;
+                this.isOpening = false;
               }, 5000);
 
             }
@@ -238,10 +247,21 @@
 }
 
 .skin-item {
+  border: 2px solid grey;
   width: 200px;
   height: auto;
   margin-right: 20px;
   flex-shrink: 0;
+}
+
+.gowno1{
+    position: absolute;
+    text-align: center;
+    width: 10px;
+    color: black;
+    background-color: black;
+    margin-left: auto;
+    margin-right: auto;
 }
 
   </style>
