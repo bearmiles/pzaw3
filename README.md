@@ -2,7 +2,7 @@
 
 casino based on CS cases and fortune wheel
 
-##Installation
+## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install MiniCasino.
 
@@ -35,7 +35,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install MiniCas
   npm run serve
 ```
 
-##Enjoy
+## Enjoy
 
 
 
