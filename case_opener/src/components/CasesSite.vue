@@ -59,6 +59,7 @@
         selected_image: null, // Wylosowany obrazek
         animationPosition: -1000, // Początkowa pozycja animacji (poza ekranem)
         animationDuration: 5000, // Czas animacji w milisekundach
+        koniecAnim: false,
       };
     },
     async created() {
@@ -108,19 +109,15 @@
                 }
             }
             );
-
-            // 3. Ustaw dropa
-            this.lastDrop = {
+            //4. ustawianie dropa
+            const drop = {
             skin_name: response.data.skin_name,
             rarity: response.data.rarity,
             skin_src: response.data.skin_src
-            };
-
-            // 4. Dodaj wylosowany skin jako ostatni obrazek na taśmie
-            this.skinImages.push({ src: this.lastDrop.skin_src });
-
-            // 5. Zainicjuj animację
-            this.startAnimation();
+          };
+          this.skinImages.push({ src: drop.skin_src });
+          //5. inicjalizowanie animacji
+          this.startAnimation(drop);
         } catch (error) {
             console.error('Error opening case:', error);
             alert('Wystąpił błąd podczas otwierania skrzynki');
@@ -151,46 +148,49 @@
             console.error('Error loading skins for animation:', error);
         }
         },
-        startAnimation() {
-            const itemWidth = 220; // szerokość skinów (img + margin)
-            const visibleItems = 5; // ile skinów ma być widocznych
-            const targetIndex = this.skinImages.length - 1; // ostatni element to nasz drop
+        startAnimation(drop) {
+          const itemWidth = 220;
+          const visibleItems = 5;
+          const targetIndex = this.skinImages.length - 1;
+          const centerOffset = (itemWidth * visibleItems) / 2 - itemWidth / 2;
+          const totalTranslate = targetIndex * itemWidth - centerOffset;
 
-            // Wylicz pozycję, by drop znalazł się idealnie na środku
-            const centerOffset = (itemWidth * visibleItems) / 2 - itemWidth / 2;
-            const totalTranslate = targetIndex * itemWidth - centerOffset;
+          let current = 0;
+          const max = totalTranslate;
+          const stepBase = 30;
+          let slowdown = 0;
 
-            let current = 0;
-            const max = totalTranslate;
-            const stepBase = 30; // bazowa prędkość
-            let slowdown = 0;
+          this.rollInterval = setInterval(() => {
+            const remaining = max - current;
 
-            this.rollInterval = setInterval(() => {
-                const remaining = max - current;
+            if (remaining < 1000) {
+              slowdown += 0.3;
+            }
 
-                // Zwalnianie przy końcu
-                if (remaining < 1000) {
-                slowdown += 0.3;
-                }
+            const step = Math.max(5, stepBase - slowdown);
+            current += step;
+            this.animationPosition = -current;
 
-                const step = Math.max(5, stepBase - slowdown);
+            if (current >= max) {
+              clearInterval(this.rollInterval);
+              this.rollInterval = null;
 
-                current += step;
-                this.animationPosition = -current;
-
-                if (current >= max) {
-                clearInterval(this.rollInterval);
-                this.rollInterval = null;
-
-                for (let i = 0; i < 4; i++) {
+              // Możesz dodać dodatkowe skiny jeśli chcesz jeszcze przedłużyć taśmę
+              for (let i = 0; i < 4; i++) {
                 const randIndex = Math.floor(Math.random() * this.skinImages.length);
                 this.skinImages.push({
                   src: this.skinImages[randIndex].src
                 });
               }
-                }
-            }, 16); // ~60FPS
+
+              // Dopiero teraz pokazujemy dropa
+              setTimeout(() => {
+                this.lastDrop = drop;
+              }, 5000);
+
             }
+          }, 16);
+        }
     }
   }
   </script>

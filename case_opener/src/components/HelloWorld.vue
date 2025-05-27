@@ -1,13 +1,13 @@
 <template>
   <div class="hello">
 
-      <h1 class="title is-1 has-text-centered">What are we playing tonight boss?</h1>
+      <h1 class="title is-1 has-text-centered">Wybierz Giereczke</h1>
       <br>
       <br>
       <br>
     <div class="buttons are-large is-flex is-justify-content-center">
       <button class="button is-light"><RouterLink to="/cases">Cases</RouterLink></button>
-      <button class="button is-hovered"><RouterLink to="/roulette">roulette</RouterLink></button>
+      <button class="button is-hovered"><RouterLink to="/roulette">Wheel</RouterLink></button>
     </div>
     
 
@@ -20,7 +20,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .button:hover {
   transform: scale(1.1);
